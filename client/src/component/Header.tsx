@@ -2,6 +2,24 @@
 import React from 'react';
 import { LuMessageCircle } from 'react-icons/lu';
 
+const NAV_ITEMS = [
+  {
+    label: 'Home',
+    href: '#home',
+    external: false,
+  },
+  {
+    label: 'About',
+    href: '#about',
+    external: false,
+  },
+  {
+    label: 'Contact',
+    href: 'https://portfolio-him-ansh-us-projects.vercel.app',
+    external: true,
+  },
+];
+
 const Header = () => {
   return (
     <header className="bg-gray-900/30 backdrop-blur-xl border-b border-gray-800/50 shadow-lg">
@@ -18,20 +36,24 @@ const Header = () => {
 
         {/* Navigation */}
         <nav className="hidden md:flex gap-8">
-          {['Home', 'About', 'Contact'].map((item) => (
-            <a
-              key={item}
-              href={`#${item.toLowerCase()}`}
-              className="text-gray-400 hover:text-blue-400 transition-colors"
-            >
-              {item}
-            </a>
-          ))}
+          <nav className="hidden md:flex gap-8">
+            {NAV_ITEMS.map(({ label, href, external }) => (
+              <a
+                key={label}
+                href={href}
+                target={external ? '_blank' : undefined}
+                rel={external ? 'noopener noreferrer' : undefined}
+                className="text-gray-400 hover:text-blue-400 transition-colors"
+              >
+                {label}
+              </a>
+            ))}
+          </nav>
         </nav>
 
         {/* CTA Button */}
-        <button
-          onClick={() => {}}
+        <a
+          href="/chat"
           className="
             px-3 py-1.5 sm:px-6 sm:py-2
             text-sm sm:text-base
@@ -43,7 +65,7 @@ const Header = () => {
           "
         >
           Get Started
-        </button>
+        </a>
       </div>
     </header>
   );

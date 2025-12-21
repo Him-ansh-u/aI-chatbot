@@ -41,7 +41,8 @@ const HeroSection = () => {
 
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
-          <button
+          <a
+            href="/chat"
             className="
               w-full sm:w-auto
               flex items-center justify-center gap-2
@@ -54,9 +55,9 @@ const HeroSection = () => {
               hover:scale-105
             "
           >
-            Try Demo
+            Chat Now
             <LuArrowRight className="w-5 h-5" />
-          </button>
+          </a>
 
           <a
             href="#built-for"
