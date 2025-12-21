@@ -10,7 +10,10 @@ const FEATURES = [
 
 const BuiltFor = () => {
   return (
-    <section className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 my-5 sm:my-20">
+    <section
+      id="built-for"
+      className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 my-5 sm:my-20 scroll-m-5"
+    >
       <div className="sm:bg-gray-800/50 backdrop-blur-xl sm:border border-gray-700/50 rounded-2xl shadow-2xl px-0 py-0 sm:px-10 sm:py-14 lg:px-14">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16 items-center">
           {/* Left Content */}

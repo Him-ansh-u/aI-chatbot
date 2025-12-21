@@ -58,7 +58,8 @@ const HeroSection = () => {
             <LuArrowRight className="w-5 h-5" />
           </button>
 
-          <button
+          <a
+            href="#built-for"
             className="
               w-full sm:w-auto
               px-6 sm:px-8
@@ -72,7 +73,7 @@ const HeroSection = () => {
             "
           >
             Learn More
-          </button>
+          </a>
         </div>
       </div>
     </section>
