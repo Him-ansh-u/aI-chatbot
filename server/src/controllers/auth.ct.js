@@ -60,4 +60,18 @@ const login = async (req, res) => {
   }
 };
 
-export { signup, login };
+
+const getMe = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const user = await User.findById(userId).select('first_name last_name phone _id').lean();
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.status(200).json({ user });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to retrieve user" });
+  }
+};
+
+export { signup, login, getMe };
