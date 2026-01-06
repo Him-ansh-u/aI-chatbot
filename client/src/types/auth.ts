@@ -4,3 +4,14 @@ export interface FormFields {
   phone: string;
   password: string;
 }
+export interface LoginPayload {
+  phone: string;
+  password: string;
+}
+
+export interface SignupPayload {
+  first_name: string;
+  last_name: string;
+  phone: string;
+  password: string;
+}

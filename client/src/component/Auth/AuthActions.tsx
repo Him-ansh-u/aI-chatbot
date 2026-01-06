@@ -4,10 +4,12 @@ const AuthActions = ({
   isLogin,
   onSubmit,
   onToggle,
+  isLoading,
 }: {
   isLogin: boolean;
   onSubmit: () => void;
   onToggle: () => void;
+  isLoading?: boolean;
 }) => {
   return (
     <>
