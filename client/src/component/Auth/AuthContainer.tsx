@@ -44,7 +44,7 @@ export default function AuthContainer() {
           });
 
           // token is stored in httpOnly cookie by server action
-          router.push('/chat');
+          router.push('/chat/new');
         } else {
           await signupAction({
             first_name: formData.firstName,

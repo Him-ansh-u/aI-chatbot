@@ -11,7 +11,7 @@ interface Props {
 
 const MessageList = ({ activeConv, isTyping, messagesEndRef }: Props) => {
   return (
-    <div className="flex-1 p-6 overflow-y-auto space-y-6">
+    <div className="flex-1 p-6 overflow-y-auto space-y-6 h-full">
       {activeConv?.messages.map((msg) => (
         <MessageBubble key={msg.id} message={msg} />
       ))}

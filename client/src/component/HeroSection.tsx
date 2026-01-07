@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import React from 'react';
 import { LuArrowRight } from 'react-icons/lu';
 
@@ -41,8 +42,8 @@ const HeroSection = () => {
 
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
-          <a
-            href="/chat"
+          <Link
+            href="/chat/new"
             className="
               w-full sm:w-auto
               flex items-center justify-center gap-2
@@ -57,7 +58,7 @@ const HeroSection = () => {
           >
             Chat Now
             <LuArrowRight className="w-5 h-5" />
-          </a>
+          </Link>
 
           <a
             href="#built-for"

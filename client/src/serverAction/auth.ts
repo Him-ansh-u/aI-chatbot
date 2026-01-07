@@ -1,19 +1,19 @@
 'use server';
 
 import { LOGIN, SIGNUP } from '@/data/endpoints';
-import { LoginPayload, SignupPayload } from '@/types/auth';
+import { LoginPayload, SignupPayload, UserSchema } from '@/types/auth';
 import { fetchData } from '@/utils/fetch.ut';
 import { cookies } from 'next/headers';
 
-async function signupAction(payload: SignupPayload) {
-  return fetchData({    
+const signupAction = async (payload: SignupPayload) => {
+  return fetchData({
     url: SIGNUP,
     method: 'POST',
     body: payload,
   });
-}
+};
 
-async function loginAction(payload: LoginPayload) {
+const loginAction = async (payload: LoginPayload) => {
   const res = await fetchData<{
     token: string;
   }>({
@@ -31,14 +31,18 @@ async function loginAction(payload: LoginPayload) {
   });
 
   return { success: true };
-}
+};
 
-async function getMe() {
-  return fetchData({
-    url: '/api/me',
+const getMe = async () => {
+  const res: { user: UserSchema } = await fetchData({
+    url: '/api/auth/me',
     method: 'GET',
   });
-}
+  return res?.user;
+};
 
+const logout = async () => {
+  (await cookies()).delete('token');
+};
 
-export { signupAction, loginAction, getMe };
+export { signupAction, loginAction, getMe, logout };

@@ -1,7 +1,9 @@
 'use client';
 import { Conversation, Message } from '@/types/chat';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
-import ChatLayout from './ChatLayout';
+import ChatHeader from './ChatHeader';
+import MessageList from './MessageList';
+import ChatInput from './ChatInput';
 
 const generateId = () => Date.now();
 
@@ -11,7 +13,6 @@ const ChatbotUI = () => {
   ]);
   const [activeConvId, setActiveConvId] = useState(1);
   const [input, setInput] = useState('');
-  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
@@ -63,27 +64,14 @@ const ChatbotUI = () => {
     }, 1500);
   }, [input, activeConvId]);
 
-  const newConversation = () => {
-    const newId = generateId();
-    setConversations((prev) => [...prev, { id: newId, title: 'New Conversation', messages: [] }]);
-    setActiveConvId(newId);
-  };
-
   return (
-    <ChatLayout
-      conversations={conversations}
-      activeConv={activeConv}
-      activeConvId={activeConvId}
-      setActiveConvId={setActiveConvId}
-      sidebarOpen={sidebarOpen}
-      toggleSidebar={() => setSidebarOpen((p) => !p)}
-      newConversation={newConversation}
-      input={input}
-      setInput={setInput}
-      sendMessage={sendMessage}
-      isTyping={isTyping}
-      messagesEndRef={messagesEndRef}
-    />
+    <>
+      <div className="flex-1 flex flex-col h-full">
+        <ChatHeader />
+        <MessageList activeConv={activeConv} isTyping={isTyping} messagesEndRef={messagesEndRef} />
+        <ChatInput input={input} setInput={setInput} sendMessage={sendMessage} />
+      </div>
+    </>
   );
 };
 

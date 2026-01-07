@@ -30,10 +30,10 @@ export async function fetchData<T = unknown>({
     body: body ? JSON.stringify(body) : undefined,
     cache: 'no-store',
   });
-
+  console.log('Fetch Response:', res);
   if (!res.ok) {
     const error = await res.json().catch(() => ({}));
-    throw new Error(error.message || 'Something went wrong');
+    return error.message || 'Something went wrong';
   }
 
   return res.json();

@@ -1,4 +1,5 @@
 'use client';
+import Link from 'next/link';
 import React from 'react';
 import { LuMessageCircle } from 'react-icons/lu';
 
@@ -52,12 +53,12 @@ const Header = () => {
         </nav>
 
         {/* CTA Button */}
-        <a
-          href="/chat"
+        <Link
+          href="/chat/new"
           className="px-3 py-1.5 sm:px-6 sm:py-2 text-sm sm:text-base bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg sm:rounded-xltransition-transform duration-300 hover:scale-105 shadow-lg"
         >
           Get Started
-        </a>
+        </Link>
       </div>
     </header>
   );
