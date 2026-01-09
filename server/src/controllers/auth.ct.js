@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import User from "../models/user.mo.js";
+import User from "../models/User.mo.js";
 import jwt from "jsonwebtoken";
 
 const signup = async (req, res) => {
