@@ -21,7 +21,8 @@ const loginAction = async (payload: LoginPayload) => {
     method: 'POST',
     body: payload,
   });
-
+  
+  console.log('------------',res);
   (await cookies()).set('token', res.token, {
     httpOnly: true,
     secure: true,
