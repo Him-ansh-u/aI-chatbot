@@ -6,8 +6,24 @@ export interface Message {
   sender: Sender;
 }
 
-export interface Conversation {
-  id: number;
+export interface ChatPayloadSchema {
+  message: string;
+  chatId?: string;
+}
+
+export interface MessageSchema {
+  conversationId?: string;
+  userId?: string;
+  role: 'user' | 'assistant';
+  content: string;
+  _id: string;
+  createdAt?: string;
+}
+
+
+export interface ChatSchema {
+  _id: string;
   title: string;
-  messages: Message[];
+  createdAt: string;
+  updatedAt: string;
 }

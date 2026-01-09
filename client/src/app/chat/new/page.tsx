@@ -1,7 +1,6 @@
 import ChatbotUI from '@/component/Chat/Index';
 
 const Page = () => {
-    return <ChatbotUI />;
-//   return <ChatbotUI chatID={'new'} />;
+  return <ChatbotUI messages={[]} />;
 };
 export default Page;

@@ -1,9 +1,10 @@
-import { Message } from '@/types/chat';
+import { MessageSchema } from '@/types/chat';
 import { memo } from 'react';
 import { LuBot, LuUser } from 'react-icons/lu';
 
-const MessageBubble = ({ message }: { message: Message }) => {
-  const isUser = message.sender === 'user';
+const MessageBubble = ({ data }: { data: MessageSchema }) => {
+  const { content, role } = data || {};
+  const isUser = role === 'user';
 
   return (
     <div className={`flex gap-3 ${isUser ? 'justify-end' : 'justify-start'}`}>
@@ -12,11 +13,11 @@ const MessageBubble = ({ message }: { message: Message }) => {
       <div
         className={`px-5 py-4 rounded-2xl max-w-2xl ${
           isUser
-            ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white'
+            ? 'bg-linear-to-r from-blue-600 to-purple-600 text-white'
             : 'bg-gray-800 text-gray-100'
         }`}
       >
-        {message.text}
+        {content}
       </div>
 
       {isUser && <LuUser size={22} />}

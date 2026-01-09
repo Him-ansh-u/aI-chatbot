@@ -22,6 +22,7 @@ const getUserConversations = async (req, res) => {
 };
 
 const startNewConversation = async (req, res) => {
+  console.log('Starting new conversation with message:', req.body.message);
   const session = await mongoose.startSession();
   session.startTransaction();
 

@@ -1,78 +1,106 @@
-'use client';
-import { Conversation, Message } from '@/types/chat';
-import { memo, useCallback, useEffect, useRef, useState } from 'react';
-import ChatHeader from './ChatHeader';
-import MessageList from './MessageList';
-import ChatInput from './ChatInput';
+  'use client';
 
-const generateId = () => Date.now();
+  import { memo, useCallback, useRef, useState, startTransition } from 'react';
+  import ChatHeader from './ChatHeader';
+  import MessageList from './MessageList';
+  import ChatInput from './ChatInput';
+  import { ChatPayloadSchema, MessageSchema } from '@/types/chat';
+  import { sendMessageSA, startNewChatSA } from '@/serverAction/chat';
+  import { useRouter } from 'next/navigation';
 
-const ChatbotUI = () => {
-  const [conversations, setConversations] = useState<Conversation[]>([
-    { id: 1, title: 'New Conversation', messages: [] },
-  ]);
-  const [activeConvId, setActiveConvId] = useState(1);
-  const [input, setInput] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const ChatbotUI = ({
+    messages,
+    chatId,
+  }: {
+    messages: MessageSchema[];
+    chatId?: string;
+  }) => {
+    const [allMessages, setAllMessages] = useState<MessageSchema[]>(messages || []);
+    const [input, setInput] = useState('');
+    const [isTyping, setIsTyping] = useState(false);
+    const messagesEndRef = useRef<HTMLDivElement | null>(null);
+    const router = useRouter();
 
-  const activeConv = conversations.find((c) => c.id === activeConvId);
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  useEffect(scrollToBottom, [activeConv?.messages, isTyping]);
-
-  const sendMessage = useCallback(() => {
-    if (!input.trim()) return;
-
-    const userMsg: Message = {
-      id: generateId(),
-      text: input,
-      sender: 'user',
+    const scrollToBottom = () => {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     };
 
-    setConversations((prev) =>
-      prev.map((conv) =>
-        conv.id === activeConvId
-          ? {
-              ...conv,
-              title: conv.messages.length === 0 ? input.slice(0, 30) : conv.title,
-              messages: [...conv.messages, userMsg],
-            }
-          : conv
-      )
-    );
+    const sendMessage = useCallback(async () => {
+      const trimmed = input.trim();
+      if (!trimmed) return;
 
-    setInput('');
-    setIsTyping(true);
-
-    setTimeout(() => {
-      const botMsg: Message = {
-        id: generateId(),
-        text: "I'm a demo chatbot with a stunning UI! This is a simulated response.",
-        sender: 'bot',
+      // 1️⃣ Optimistically render user message
+      const optimisticUserMessage: MessageSchema = {
+        _id: Date.now().toString(),
+        content: trimmed,
+        role: 'user',
       };
 
-      setConversations((prev) =>
-        prev.map((conv) =>
-          conv.id === activeConvId ? { ...conv, messages: [...conv.messages, botMsg] } : conv
-        )
-      );
-      setIsTyping(false);
-    }, 1500);
-  }, [input, activeConvId]);
+      setAllMessages((prev) => [...prev, optimisticUserMessage]);
+      setInput('');
+      setIsTyping(true);
+      scrollToBottom();
 
-  return (
-    <>
+      try {
+        const payload: ChatPayloadSchema = {
+          message: trimmed,
+        };
+
+        // 2️⃣ New chat flow
+        if (!chatId) {
+          const res = await startNewChatSA(payload);
+
+          // 3️⃣ Soft navigation (NON-BLOCKING)
+          startTransition(() => {
+            window.location.href =`/chat/${res?.conversationId}`;
+          });
+          
+          setIsTyping(false);
+          return;
+        }
+
+        // 4️⃣ Existing chat flow
+        const res = await sendMessageSA({ ...payload, chatId });
+
+        setAllMessages((prev) => [...prev, res]);
+        setIsTyping(false);
+        scrollToBottom();
+      } catch (error) {
+        setIsTyping(false);
+
+        const errorMessage =
+          error instanceof Error
+            ? error.message
+            : 'Error sending message. Please try again.';
+
+        setAllMessages((prev) => [
+          ...prev,
+          {
+            _id: Date.now().toString(),
+            content: errorMessage,
+            role: 'assistant',
+          },
+        ]);
+
+        scrollToBottom();
+      }
+    }, [input, chatId, router]);
+
+    return (
       <div className="flex-1 flex flex-col h-full">
         <ChatHeader />
-        <MessageList activeConv={activeConv} isTyping={isTyping} messagesEndRef={messagesEndRef} />
-        <ChatInput input={input} setInput={setInput} sendMessage={sendMessage} />
+        <MessageList
+          messages={allMessages}
+          isTyping={isTyping}
+          messagesEndRef={messagesEndRef}
+        />
+        <ChatInput
+          input={input}
+          setInput={setInput}
+          sendMessage={sendMessage}
+        />
       </div>
-    </>
-  );
-};
+    );
+  };
 
-export default memo(ChatbotUI);
+  export default memo(ChatbotUI);
